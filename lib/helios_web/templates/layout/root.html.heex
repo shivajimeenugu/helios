@@ -6,25 +6,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="csrf-token" content={csrf_token_value()}>
     <%= live_title_tag assigns[:page_title] || "Helios", suffix: " · Phoenix Framework" %>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")}/>
     <script defer phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/app.js")}></script>
-  </head>
-  <body>
-    <header>
-      <section class="container">
-        <nav>
-          <ul>
-            <li><a href="https://hexdocs.pm/phoenix/overview.html">Get Started</a></li>
-            <%= if function_exported?(Routes, :live_dashboard_path, 2) do %>
-              <li><%= link "LiveDashboard", to: Routes.live_dashboard_path(@conn, :home) %></li>
-            <% end %>
-          </ul>
-        </nav>
-        <a href="https://phoenixframework.org/" class="phx-logo">
-          <img src={Routes.static_path(@conn, "/images/phoenix.png")} alt="Phoenix Framework Logo"/>
-        </a>
-      </section>
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+
+    <style>
+        @font-face {
+            font-family: 'heliosfont';
+            src: url('./assets/MonotypeFuturaNowHeadline.otf') format('opentype');
+        }
+        .heliosfont{
+            font-family: "heliosfont";
+            font-size: 40px;
+        }
+        .radio-toolbar input[type="radio"] {
+        opacity: 0;
+        position: fixed;
+        width: 0;
+        }
+
+        .radio-toolbar label {
+        /* display: block; */
+        /* background-color: #ddd; */
+        /* padding: 10px 20px;
+        font-family: sans-serif, Arial;
+        font-size: 16px;
+        border: 2px solid #444;
+        border-radius: 4px; */
+        }
+
+        .radio-toolbar label:hover {
+        /* background-color: #dfd; */
+        }
+
+        .radio-toolbar input[type="radio"]:focus + label {
+        /* border: 2px dashed #444; */
+        }
+
+        .radio-toolbar input[type="radio"]:checked + label {
+        background-color: rgb(227, 233, 227);
+        /* border-color: #4c4; */
+        }
+    </style>
+
+
+ </head>
+
+
+  <body style="margin:0">
+
+    <header style="margin:0" class="">
+      <div class="header bg-black flex h-[70px] items-center	">
+            <div class="mobile-menu-button sidebarbtn pl-2 h-16 logo flex p-1"><img class="" src={Routes.static_path(@conn, "/images/sidebarbtn.png")} alt="sidebarbtn" srcset=""></div>
+            <img class="h-[290%] ml-1" src={Routes.static_path(@conn, "/images/logo.png")} alt="sidebarbtn" srcset="">
+        </div>
     </header>
+
+    <div class="m-0 lg:hidden h-screen z-10 sidebar bg-black text-white w-80 space-y-6 py-7 px-2 lg:fixed lg:w-4/12 absolute inset-y-0 left-0 transform -translate-x-full md:absolute md:translate-x-0 transition duration-200 ease-in-out" >
+    <div class="">
+        <div class="pb-14 text-white">
+            <div class="p-2 px-2  ml-4 mr-4 mb-8 text-3xl   items-center flex justify-between">
+                <div class="close"><i class="far fa-times-circle"></i></div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
     <%= @inner_content %>
   </body>
+
+  <script>
+    const btn = document.querySelector(".mobile-menu-button");
+          const close = document.querySelector(".close");
+          const sidebar = document.querySelector(".sidebar");
+
+          // add our event listener for the click
+          btn.addEventListener("click", () => {
+          sidebar.classList.toggle("-translate-x-full");
+          });
+          close.addEventListener("click", () => {
+          sidebar.classList.add("-translate-x-full");
+          });
+          close.addEventListener("click", () => {
+          sidebar.classList.add("lg:hidden");
+          });
+          btn.addEventListener("click", () => {
+          sidebar.classList.toggle("lg:hidden");
+          });
+</script>
 </html>

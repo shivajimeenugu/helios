@@ -11,11 +11,15 @@ defmodule Helios.Application do
       # Start the Telemetry supervisor
       HeliosWeb.Telemetry,
       # Start the PubSub system
-      {Phoenix.PubSub, name: Helios.PubSub},
+      {Phoenix.PubSub, name: Helios.PubSub, adapter: Phoenix.PubSub.PG2},
       # Start the Endpoint (http/https)
-      HeliosWeb.Endpoint
+      HeliosWeb.Endpoint,
       # Start a worker by calling: Helios.Worker.start_link(arg)
       # {Helios.Worker, arg}
+
+      {MyXQL, username: "root",password: "",database: "helios",hostname: "localhost", name: :myxql}
+      # {:ok, pid} = MyXQL.start_link(username: "root",password: "",database: "helios",hostname: "localhost")
+
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
