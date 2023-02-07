@@ -21,6 +21,8 @@ defmodule HeliosWeb.Router do
     get "/hello", HelloController, :index
 
     live "/controls", ControlsLive
+
+    live "/features", FeaturesLive
   end
 
   # Other scopes may use custom stacks.

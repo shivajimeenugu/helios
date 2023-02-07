@@ -7,7 +7,7 @@
     <meta name="csrf-token" content={csrf_token_value()}>
     <%= live_title_tag assigns[:page_title] || "Helios", suffix: " · Phoenix Framework" %>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")}/>
+    <!--<link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")}/>-->
     <script defer phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/app.js")}></script>
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
 
@@ -48,6 +48,11 @@
         background-color: rgb(227, 233, 227);
         /* border-color: #4c4; */
         }
+
+        .hselect {
+        appearance: none;
+        background-color: transparent;
+        }
     </style>
 
 
@@ -63,12 +68,27 @@
         </div>
     </header>
 
-    <div class="m-0 lg:hidden h-screen z-10 sidebar bg-black text-white w-80 space-y-6 py-7 px-2 lg:fixed lg:w-4/12 absolute inset-y-0 left-0 transform -translate-x-full md:absolute md:translate-x-0 transition duration-200 ease-in-out" >
+    <div class="m-0 lg:hidden h-screen z-10 sidebar bg-white text-black-600 w-6/12 space-y-6 py-7 px-2 lg:fixed lg:w-6/12 absolute inset-y-0 left-0 transform -translate-x-full md:absolute md:translate-x-0 transition duration-200 ease-in-out" >
     <div class="">
-        <div class="pb-14 text-white">
+        <div class="pb-14 text-black font-['heliosfont']">
+
             <div class="p-2 px-2  ml-4 mr-4 mb-8 text-3xl   items-center flex justify-between">
                 <div class="close"><i class="far fa-times-circle"></i></div>
             </div>
+
+            <div class="p-2 px-2 mt-4 ml-5 text-xl font-bold  flex justify-start">
+                <a href="/" class="ml-6">Home</a>
+            </div>
+
+            <div class="p-2 px-2 mt-4 ml-5 text-xl font-bold  flex justify-start">
+                <a href="/controls" class="ml-6">Controls</a>
+            </div>
+
+            <div class="p-2 px-2 mt-4 ml-5 text-xl font-bold  flex justify-start">
+
+                <a href="/features" class="ml-6">Features</a>
+            </div>
+
 
 
         </div>
