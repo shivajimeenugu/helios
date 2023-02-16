@@ -9,7 +9,8 @@ defmodule HeliosWeb.ControlsLive do
       peekWindowAngle,
       radioVolumeType,
       radioVolumeTrack,
-      light
+      light,
+      Peekwindow
       ]]=MyXQL.query!(:myxql, "SELECT * From controls").rows
     socket = assign(socket, :brightness, 10)
     socket = assign(socket, :peekWindowAngle, peekWindowAngle)
