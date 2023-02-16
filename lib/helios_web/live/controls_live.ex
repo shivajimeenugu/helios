@@ -2,6 +2,7 @@ defmodule HeliosWeb.ControlsLive do
   use HeliosWeb, :live_view
 
   def mount(_params, _session, socket) do
+    # :ok = Phoenix.PubSub.subscribe(Helios.PubSub, "room:lobby")
     HeliosWeb.Endpoint.subscribe("room:lobby")
     [[
       id,
@@ -15,7 +16,7 @@ defmodule HeliosWeb.ControlsLive do
     socket = assign(socket, :radioVolumeType, radioVolumeType)
     socket = assign(socket, :radioVolumeTrack, radioVolumeTrack)
     socket = assign(socket, :light, light)
-
+    socket = assign(socket, :light, Peekwindow)
     {:ok, socket}
   end
 
@@ -57,16 +58,18 @@ defmodule HeliosWeb.ControlsLive do
         </div>
     </div>
 
+    <form phx-change="Peekwindow">
     <div class="flex justify-start pt-3 pl-5 w-9/12">
         <div class="font-['heliosfont'] text-[160%] pt-3">Peek-window</div>
         <div class="pt-6 pl-6">
             <label class=" relative inline-flex items-center mr-5 cursor-pointer">
-            <input type="checkbox" value="" class="sr-only peer" checked>
+            <input type="checkbox" name="Peekwindow" class="sr-only peer" checked>
             <div class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
             <!-- <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">Green</span> -->
           </label>
         </div>
     </div>
+    </form>
 
     <div class="flex pt-3 pl-5 h-auto  items-center">
         <div class="w-9/12">
@@ -218,8 +221,24 @@ defmodule HeliosWeb.ControlsLive do
     IO.inspect(res)
     IO.inspect(d["peekWindowAngle"])
     HeliosWeb.Endpoint.broadcast_from(self(), "room:lobby", "peekWindowAngle", %{data: d["peekWindowAngle"]})
+
+    # HeliosWeb.Endpoint.broadcast("room:lobby", "peekWindowAngle", %{data: d["peekWindowAngle"]})
     {:noreply, socket}
   end
+
+
+
+
+  def handle_event("Peekwindow",d, socket) do
+    socket = assign(socket, :Peekwindow, d["Peekwindow"])
+    res=MyXQL.query!(:myxql, "Update controls set Peekwindow=#{d["Peekwindow"]} where id=1")
+    IO.inspect(res)
+    IO.inspect(d["Peekwindow"])
+    HeliosWeb.Endpoint.broadcast_from(self(), "room:lobby", "Peekwindow", %{data: d["Peekwindow"]})
+    # HeliosWeb.Endpoint.broadcast("room:lobby", "peekWindowAngle", %{data: d["peekWindowAngle"]})
+    {:noreply, socket}
+  end
+
 
   def handle_event("radioVolumeType",d, socket) do
     socket = assign(socket, :radioVolumeType, d["radioVolumeType"])
@@ -246,14 +265,29 @@ defmodule HeliosWeb.ControlsLive do
     {:noreply, socket}
   end
 
+
+  # %Phoenix.Socket.Broadcast{
+  #   event: "peekWindowAngle",
+  #   payload: %{data: "29"},
+  #   topic: "room:lobby"
+  # }
   def handle_info(data, socket) do
-    y_pos = %{a: 1, b: 2, c: 3, d: 4, e: 5, f: 6}
+    # IO.inspect("from controls live view")
+    # IO.inspect(data)
     socket= cond do
         data.event == "shout" ->
           IO.puts("[LiveView] shout")
           new = 20
           socket = assign(socket, :brightness, new)
           socket
+        data.event == "peekWindowAngle" ->
+          IO.puts("[LiveView][handle_info] peekWindowAngle updated")
+          socket = assign(socket, :peekWindowAngle,data.payload["data"])
+          socket
+          data.event == "light" ->
+            IO.puts("[LiveView][handle_info] light updated")
+            socket = assign(socket, :light,data.payload["light"])
+            socket
 
         true ->
           socket
