@@ -10,14 +10,14 @@ defmodule HeliosWeb.ControlsLive do
       radioVolumeType,
       radioVolumeTrack,
       light,
-      Peekwindow
+      peekwindow
       ]]=MyXQL.query!(:myxql, "SELECT * From controls").rows
     socket = assign(socket, :brightness, 10)
     socket = assign(socket, :peekWindowAngle, peekWindowAngle)
     socket = assign(socket, :radioVolumeType, radioVolumeType)
     socket = assign(socket, :radioVolumeTrack, radioVolumeTrack)
     socket = assign(socket, :light, light)
-    socket = assign(socket, :light, Peekwindow)
+    socket = assign(socket, :light, peekwindow)
     {:ok, socket}
   end
 
@@ -232,7 +232,7 @@ defmodule HeliosWeb.ControlsLive do
 
   def handle_event("Peekwindow",d, socket) do
     socket = assign(socket, :Peekwindow, d["Peekwindow"])
-    res=MyXQL.query!(:myxql, "Update controls set Peekwindow=#{d["Peekwindow"]} where id=1")
+    res=MyXQL.query!(:myxql, "Update controls set Peekwindow='#{d["Peekwindow"]}' where id=1")
     IO.inspect(res)
     IO.inspect(d["Peekwindow"])
     HeliosWeb.Endpoint.broadcast_from(self(), "room:lobby", "Peekwindow", %{data: d["Peekwindow"]})
