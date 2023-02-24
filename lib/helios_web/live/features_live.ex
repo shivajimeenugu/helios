@@ -2,6 +2,7 @@ defmodule HeliosWeb.FeaturesLive do
   use HeliosWeb, :live_view
 
   def mount(_params, _session, socket) do
+    :ok = Phoenix.PubSub.subscribe(Helios.PubSub, "room:lobby")
     HeliosWeb.Endpoint.subscribe("room:lobby")
     [[
       id,

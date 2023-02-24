@@ -3,6 +3,8 @@ defmodule HeliosWeb.RoomChannel do
 
   @impl true
   def join("room:lobby", payload, socket) do
+    HeliosWeb.Endpoint.subscribe("room:lobby")
+    :ok = Phoenix.PubSub.subscribe(Helios.PubSub, "room:lobby")
     if authorized?(payload) do
       {:ok, socket}
     else
@@ -28,20 +30,28 @@ defmodule HeliosWeb.RoomChannel do
   end
 
 
-  # def handle_info(data, socket) do
+  def handle_out(e,p,socket) do
+    push(socket, e, p)
+    IO.puts("[RoomChannel]  handle out")
+    IO.inspect(e)
+    IO.inspect(p)
+    {:noreply, socket}
+  end
+  def handle_info(data, socket) do
+    IO.puts("[RoomChannel] info")
+    IO.inspect(data,socket)
+    socket= cond do
+        data.event == "e" ->
+          IO.puts("[RoomChannel] handle_info[m]")
+          Phoenix.Channel.push(socket, "RobotBloc", data.payload)
+          socket
 
-  #   socket= cond do
-  #       data.event == "e" ->
-  #         IO.puts("[RoomChannel] handle_info[m]")
-  #         Phoenix.Channel.push(socket, "RobotBloc", data.payload)
-  #         socket
+        true ->
+          socket
+      end
 
-  #       true ->
-  #         socket
-  #     end
-
-  #   {:noreply, socket}
-  # end
+    {:noreply, socket}
+  end
 
 
   # Add authorization logic here as required.

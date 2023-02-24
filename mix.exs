@@ -46,7 +46,8 @@ defmodule Helios.MixProject do
       {:gettext, "~> 0.18"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
-      {:myxql, "~> 0.6.0"}
+      {:myxql, "~> 0.6.0"},
+      {:poison,">= 0.0.0"}
     ]
   end
 
