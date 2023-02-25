@@ -43,9 +43,9 @@ defmodule HeliosWeb.ControlsLive do
 
     socket = assign(socket, :light, light)
 
-    socket = assign(socket, :slider1, slider["slider1"])
-    socket = assign(socket, :slider2, slider["slider1"])
-    socket = assign(socket, :slider3, slider["slider1"])
+    socket = assign(socket, :slider1, String.to_integer(slider["slider1"]))
+    socket = assign(socket, :slider2, String.to_integer(slider["slider2"]))
+    socket = assign(socket, :slider3, String.to_integer(slider["slider3"]))
 
     socket = assign(socket, :sent_name, sent["sent_name"])
     socket = assign(socket, :sent_time, sent["sent_time"])
