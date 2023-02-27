@@ -9,7 +9,7 @@ import Config
 
 # Configures the endpoint
 config :helios, HeliosWeb.Endpoint,
-  url: [host: "localhost"],
+  url: [host: "0.0.0.0"],
   render_errors: [view: HeliosWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: Helios.PubSub,
   live_view: [signing_salt: "no4PYB7E"]

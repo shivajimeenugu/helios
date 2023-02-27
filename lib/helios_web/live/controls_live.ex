@@ -11,8 +11,8 @@ defmodule HeliosWeb.ControlsLive do
   end
 
   def mount(_params, _session, socket) do
-    # :ok = Phoenix.PubSub.subscribe(Helios.PubSub, "room:lobby")
-    HeliosWeb.Endpoint.subscribe("room:lobby")
+    Phoenix.PubSub.subscribe(Helios.PubSub, "room:update")
+    HeliosWeb.Endpoint.subscribe("room:update")
     data=MyXQL.query!(:myxql, "SELECT * From controls").rows
 
     [[
@@ -324,7 +324,7 @@ defmodule HeliosWeb.ControlsLive do
     IO.inspect(d)
     socket = assign(socket, :light, d["light"])
     res=MyXQL.query!(:myxql, "Update controls set light='#{d["light"]}' where id=1")
-    HeliosWeb.Endpoint.broadcast_from(self(), "room:lobby", "light", %{data: d["light"]})
+    HeliosWeb.Endpoint.broadcast("room:update", "light", %{data: d["light"]})
     {:noreply, socket}
   end
 
@@ -422,20 +422,16 @@ defmodule HeliosWeb.ControlsLive do
   # }
   def handle_info(data, socket) do
     # IO.inspect("from controls live view")
-    # IO.inspect(data)
+    IO.puts("-------------------------------------------------------")
+    IO.inspect(data)
+    IO.puts("-------------------------------------------------------")
     socket= cond do
-        data.event == "shout" ->
-          IO.puts("[LiveView] shout")
-          new = 20
-          socket = assign(socket, :brightness, new)
-          socket
-        data.event == "peekWindowAngle" ->
-          IO.puts("[LiveView][handle_info] peekWindowAngle updated")
-          socket = assign(socket, :peekWindowAngle,data.payload["data"])
-          socket
           data.event == "light" ->
-            IO.puts("[LiveView][handle_info] light updated")
-            socket = assign(socket, :light,data.payload["light"])
+            # {:ok,temp}=encode_map(data)
+            IO.inspect(data.payload.data)
+            IO.puts("[LiveView][handle_info] light updated #{data.payload["data"]}")
+            socket = assign(socket, :light,data.payload.data)
+            # Phoenix.PubSub.broadcast_from(Helios.PubSub,self() ,"room:lobby", data)
             socket
 
         true ->

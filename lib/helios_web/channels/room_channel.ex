@@ -3,8 +3,8 @@ defmodule HeliosWeb.RoomChannel do
 
   @impl true
   def join("room:lobby", payload, socket) do
-    HeliosWeb.Endpoint.subscribe("room:lobby")
-    :ok = Phoenix.PubSub.subscribe(Helios.PubSub, "room:lobby")
+    HeliosWeb.Endpoint.subscribe("room:update")
+    Phoenix.PubSub.subscribe(Helios.PubSub, "room:update")
     if authorized?(payload) do
       {:ok, socket}
     else
@@ -39,11 +39,11 @@ defmodule HeliosWeb.RoomChannel do
   end
   def handle_info(data, socket) do
     IO.puts("[RoomChannel] info")
-    IO.inspect(data,socket)
+    IO.inspect(data)
     socket= cond do
-        data.event == "e" ->
+        data.event == "light" ->
           IO.puts("[RoomChannel] handle_info[m]")
-          Phoenix.Channel.push(socket, "RobotBloc", data.payload)
+          Phoenix.Channel.push(socket, "light", data.payload)
           socket
 
         true ->
